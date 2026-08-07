@@ -13,7 +13,6 @@ struct CardCellView: View {
     @State private var glowIntensity: CGFloat = 0
     @State private var shimmerOffset: CGFloat = -200
     @State private var pulseScale: CGFloat = 1.0
-    @State private var showDetail = false
 
     private var isAmexCenturion: Bool {
         card.cardNickname.contains("Centurion") || card.eliteTier == .centurion
@@ -117,9 +116,6 @@ struct CardCellView: View {
         }
         .onDisappear {
             motionManager.stop()
-        }
-        .sheet(isPresented: $showDetail) {
-            CardDetailView(card: card)
         }
     }
 
