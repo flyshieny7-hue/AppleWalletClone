@@ -10,6 +10,7 @@ struct CardStackView: View {
     @State private var draggedCardID: UUID?
     @State private var rotationAngles: [UUID: Double] = [:]
     @State private var zOffsets: [UUID: Double] = [:]
+    @State private var detailCard: Card? = nil   // ← ДОБАВЛЕНО
 
     private let collapsedSpacing: CGFloat = 14
     private let expandedSpacing: CGFloat = 240
@@ -97,17 +98,16 @@ struct CardStackView: View {
                 }
             }
         }
+        .fullScreenCover(item: $detailCard) { card in   // ← ДОБАВЛЕНО
+            CardDetailView(card: card, namespace: namespace)
+        }
     }
 
     private func handleCardTap(_ card: Card) {
         withAnimation(.spring(response: 0.4, dampingFraction: 0.75, blendDuration: 0)) {
             if isExpanded {
                 if selectedCardID == card.id {
-                    isExpanded = false
-                    selectedCardID = nil
-                    for (index, c) in cards.enumerated() {
-                        zOffsets[c.id] = Double(index)
-                    }
+                    detailCard = card   // ← ИЗМЕНЕНО: открываем детали вместо сворачивания
                 } else {
                     selectedCardID = card.id
                     zOffsets[card.id] = 1000
