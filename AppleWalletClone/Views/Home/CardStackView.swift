@@ -10,7 +10,7 @@ struct CardStackView: View {
     @State private var draggedCardID: UUID?
     @State private var rotationAngles: [UUID: Double] = [:]
     @State private var zOffsets: [UUID: Double] = [:]
-    @State private var detailCard: Card? = nil   // ← ДОБАВЛЕНО
+    @State private var detailCard: Card? = nil
 
     private let collapsedSpacing: CGFloat = 14
     private let expandedSpacing: CGFloat = 240
@@ -95,10 +95,17 @@ struct CardStackView: View {
                     } label: {
                         Label("Copy Number", systemImage: "doc.on.doc")
                     }
+                    
+                    Button {
+                        HapticManager.shared.lightImpact()
+                        detailCard = card
+                    } label: {
+                        Label("View Details", systemImage: "eye")
+                    }
                 }
             }
         }
-        .fullScreenCover(item: $detailCard) { card in   // ← ДОБАВЛЕНО
+        .fullScreenCover(item: $detailCard) { card in
             CardDetailView(card: card, namespace: namespace)
         }
     }
@@ -107,7 +114,7 @@ struct CardStackView: View {
         withAnimation(.spring(response: 0.4, dampingFraction: 0.75, blendDuration: 0)) {
             if isExpanded {
                 if selectedCardID == card.id {
-                    detailCard = card   // ← ИЗМЕНЕНО: открываем детали вместо сворачивания
+                    detailCard = card
                 } else {
                     selectedCardID = card.id
                     zOffsets[card.id] = 1000
